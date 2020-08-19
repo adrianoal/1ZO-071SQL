@@ -549,7 +549,7 @@ FROM EMPLOYEES E
 
 -- Comando scape -- Forca o Oracle a entender caracteres literais...
   SELECT employee_id, last_name, job_id
-  FROM   employees WHERE  job_id LIKE '%SA\_%' ESCAPE '\'; -- Utilizar o comando ESCAPE em caracter especial, para forcar o Oracle a entender _ por exemplo...
+  FROM   employees WHERE  job_id LIKE '%SA\_%' ESCAPE '\'; -- Utilizar o comando ESCAPE em caracter especial, para forcar o Oracle a entender _ por exemplo...'
   
 -- Comando is nul
   SELECT last_name, manager_id
@@ -897,33 +897,185 @@ WHERE JOB_ID IN ('sales','representative','stock clerk')
 AND SALARY  NOT IN (2500,3500,7000);
 
 
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------			
+5.Capitulo 04 - Usando Simples Funções
+
+       
+1) Write a query to display the system date. Label the column Date.
+Note: If your database is remotely located in a different time zone, the output will be
+the date for the operating system on which the database resides.  
+
+2) The HR department needs a report to display the employee number, last name, salary,
+and salary increased by 15.5% (expressed as a whole number) for each employee.
+Label the column New Salary. Save your SQL statement in a file named
+lab_03_02.sql.
+
+3) Run your query in the file lab_03_02.sql.
+
+4) Modify your query lab_03_02.sql to add a column that subtracts the old salary
+from the new salary. Label the column Increase. Save the contents of the file as
+lab_03_04.sql. Run the revised query.
+
+5) Write a query that displays the last name (with the first letter in uppercase and all the
+other letters in lowercase) and the length of the last name for all employees whose
+name starts with the letters “J,” “A,” or “M.” Give each column an appropriate label.
+Sort the results by the employees’ last names.
+
+    Modify the query such that the case of the entered letter does not affect the output. The
+    entered   letter must be capitalized before being processed by the SELECT query
+    
+6) The HR department wants to find the duration of employment for each employee. For
+each employee, display the last name and calculate the number of months between
+today and the date on which the employee was hired. Label the column
+MONTHS_WORKED. Order your results by the number of months employed. Round
+the number of months up to the closest whole number.
+
+Note: Because this query depends on the date when it was executed, the values in the
+MONTHS_WORKED column will differ for you.
+
+7) Create a query to display the last name and salary for all employees. Format the
+salary to be 15 characters long, left-padded with the $ symbol. Label the column
+SALARY.
+
+8) Create a query that displays the first eight characters of the employees’ last names
+and indicates the amounts of their salaries with asterisks. Each asterisk signifies a
+thousand dollars. Sort the data in descending order of salary. Label the column 
+EMPLOYEES_AND_THEIR_SALARIES.
+
+9) Create a query to display the last name and the number of weeks employed for all
+employees in department 90. Label the number of weeks column TENURE. Truncate
+the number of weeks value to 0 decimal places. Show the records in descending order
+of the employee’s tenure.
+Note: The TENURE value will differ as it depends on the date when you run the
+query.
+
+ 
+Resolução:
+------------------------------------------------------------------------------- 
+1) Write a query to display the system date. Label the column Date.
+Note: If your database is remotely located in a different time zone, the output will be
+the date for the operating system on which the database resides. 
+
+ 
+SELECT CURRENT_DATE "DATE "FROM DUAL;
+
+-------------------------------------------------------------------------------
+2) The HR department needs a report to display the employee number, last name, salary,
+and salary increased by 15.5% (expressed as a whole number) for each employee.
+Label the column New Salary. Save your SQL statement in a file named
+lab_03_02.sql. 
+
+
+SELECT EMPLOYEE_ID,
+       LAST_NAME,
+       SALARY, 
+       SALARY + (SALARY * 15.5 / 100) "NEW SALARY"
+FROM EMPLOYEES;
+ 
+------------------------------------------------------------------------------- 
+3) Run your query in the file lab_03_02.sql. 
+ 
+ 
+-------------------------------------------------------------------------------
+4) Modify your query lab_03_02.sql to add a column that subtracts the old salary
+from the new salary. Label the column Increase. Save the contents of the file as
+lab_03_04.sql. Run the revised query.
+
+SELECT EMPLOYEE_ID,
+       LAST_NAME,
+       SALARY + (SALARY * 15.5 / 100) - SALARY "INCREASE"
+FROM EMPLOYEES; 
+ 
+-------------------------------------------------------------------------------
+5) Write a query that displays the last name (with the first letter in uppercase and all the
+other letters in lowercase) and the length of the last name for all employees whose
+name starts with the letters “J,” “A,” or “M.” Give each column an appropriate label.
+Sort the results by the employees’ last names. 
+ 
+ 
+SELECT INITCAP(LAST_NAME) "NOME",
+       LENGTH(LAST_NAME) "COMPRIMENTO"
+FROM EMPLOYEES
+WHERE SUBSTR(LAST_NAME,1,1) IN ('J','A','M');
+
+
+-------------------------------------------------------------------------------
+6) The HR department wants to find the duration of employment for each employee. For
+each employee, display the last name and calculate the number of months between
+today and the date on which the employee was hired. Label the column
+MONTHS_WORKED. Order your results by the number of months employed. Round
+the number of months up to the closest whole number.
+
+
+SELECT LAST_NAME,
+       ROUND(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) "MONTHS WORKED"
+FROM EMPLOYEES
+ORDER BY  HIRE_DATE ASC;
+
+
+-------------------------------------------------------------------------------
+7) Create a query to display the last name and salary for all employees. Format the
+salary to be 15 characters long, left-padded with the $ symbol. Label the column
+SALARY.
+
+
+SELECT LAST_NAME,
+       LPAD(SALARY,15,'$') AS SALARY
+FROM EMPLOYEES;
+
+-------------------------------------------------------------------------------
+8) Create a query that displays the first eight characters of the employees’ last names
+and indicates the amounts of their salaries with asterisks. Each asterisk signifies a
+thousand dollars. Sort the data in descending order of salary. Label the column 
+EMPLOYEES_AND_THEIR_SALARIES.
+
+
+SELECT SUBSTR(CONCAT(FIRST_NAME, LAST_NAME),1,8) "NAME",
+       '$ '||SALARY "SALARIO"
+FROM EMPLOYEES
+ORDER BY SALARY DESC;
+
+-------------------------------------------------------------------------------
+9) Create a query to display the last name and the number of weeks employed for all
+employees in department 90. Label the number of weeks column TENURE. Truncate
+the number of weeks value to 0 decimal places. Show the records in descending order
+of the employee’s tenure.
+Note: The TENURE value will differ as it depends on the date when you run the
+query.
+
+
+SELECT LAST_NAME,
+       TRUNC((SYSDATE - HIRE_DATE)/7) "TENURE"
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 90
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------			
 
 
 
- 
- 
- 
- 
- 
- 
- 
 
 
 
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
