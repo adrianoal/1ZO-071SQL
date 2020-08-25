@@ -1052,11 +1052,91 @@ WHERE DEPARTMENT_ID = 90
 
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------			
+6.Capítulo 05 - Usando Funções de conversão e condições 
+
+1) Create a report that produces the following for each employee:
+<employee last name> earns <salary> monthly but wants <3 times salary.>. Label the
+column Dream Salaries.
+
+
+SELECT LAST_NAME,
+       (SALARY * 3) "DREAM SALARIES"
+FROM EMPLOYEES;
+
+-------------------------------------------------------------------------------
+2) Display each employee’s last name, hire date, and salary review date, which is the
+first Monday after six months of service. Label the column REVIEW. Format the
+dates to appear in the format similar to “Monday, the Thirty-First of July, 2000.”
+
+SELECT LAST_NAME, 
+       HIRE_DATE,
+       TO_CHAR(NEXT_DAY(ADD_MONTHS(HIRE_DATE,6),'SEGUNDA-FEIRA'),'FMDAY "DE" MONTH, "DE", YEAR') "PROXIMA SEGUNDA-FEIRA APOS SEIS MESES DE CONTARTACAO"
+FROM EMPLOYEES;  
+
+-------------------------------------------------------------------------------
+3) Display the last name, hire date, and day of the week on which the employee started.
+Label the column DAY. Order the results by the day of the week, starting with
+Monday.
+
+SELECT LAST_NAME,
+       HIRE_DATE,
+       TO_CHAR(HIRE_DATE,'DAY')
+FROM EMPLOYEES
+ORDER BY TO_CHAR(HIRE_DATE -1,'D')
+
+-------------------------------------------------------------------------------
+4) Create a query that displays the employees’ last names and commission amounts. If
+an employee does not earn commission, show “No Commission.” Label the column
+COMM.
+
+SELECT LAST_NAME,
+       NVL(TO_CHAR(COMMISSION_PCT), 'No Commission') "COMM"
+FROM EMPLOYEES;
+
+-------------------------------------------------------------------------------
+5) Using the DECODE function, write a query that displays the grade of all employees
+based on the value of the JOB_ID column, using the following data:
+ 
+Job                   Grade   
+AD_PRES               A
+ST_MAN                B
+IT_PROG               c
+SA_REP                d
+ST_CLERK              e
+None of the above     0
 
 
 
+-- RESOLUCAO
+SELECT JOB_ID,
+       DECODE(JOB_ID,'AD_PRES','A',
+                      'ST_MAN','B',
+                      'IT_PROG','C',
+                      'SA_REP','D',
+                      'ST_CLERK','E',
+                      '0') "JOB_ID" 
+FROM EMPLOYEES;    
 
 
+-------------------------------------------------------------------------------
+6) Rewrite the statement in the preceding exercise by using the CASE syntax.
+
+
+SELECT JOB_ID,
+       CASE JOB_ID  
+                WHEN 'AD_PRES' THEN 'A'
+                WHEN 'ST_MAN' THEN 'B'
+                WHEN 'IT_PROG' THEN 'C'
+                WHEN 'SA_REP' THEN 'D'
+                WHEN 'ST_CLERK' THEN 'E'
+            ELSE '0'
+        END "JOB_ID"
+FROM EMPLOYEES;    
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------	
+7.Capítulo 06 - Reportando dados agrupados com funções de grupo
 
 
 
